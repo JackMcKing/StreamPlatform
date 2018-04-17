@@ -7,12 +7,22 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="stylesheets/bootstrap.min.css" crossorigin="anonymous">
+    <style>
+        body {
+            background-image:url('http://oc7t636v9.bkt.clouddn.com/ram_mh.JPG');
+            background-repeat:repeat;
+            background-position:center top;
+            background-attachment:fixed;
+            background-size: contain;
+            /*-webkit-filter: blur(15px);*/
+        }
+    </style>
 
     <title>Flint Stream</title>
 </head>
 <body>
-<div class="container">
-    <nav class="navbar navbar-default">
+<div class="container"><div class="bg"></div>
+    <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -28,7 +38,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">点拨 <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="#">点播 <span class="sr-only">(current)</span></a></li>
                     <li><a href="#">直播</a></li>
                     <!--<li class="dropdown">-->
                     <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
@@ -71,17 +81,18 @@
     <!--<div class="btn-group-vertical col-md-8 col-xs-8" role="group" aria-label="Vertical button group">-->
         <!--<button type="button" class="btn btn-default">Rick and morty S02E01</button>-->
     <!--</div>-->
+    <!--onclick="jump('<%= data.files[i] %>')"-->
+
     <div class="btn-group-vertical col-md-4 col-xs-4" role="group" aria-label="Vertical button group">
         <% for(var i=0 ; i<data.files.length; i++){ %>
-        <div type="button" class="btn btn-default seasonbtn" onclick="jump('<%= data.files[i] %>')"><%=
+        <div type="button" class="btn btn-default seasonbtn" ><%=
                 data.files[i]
             %></div>
         <% }%>
-        <button id="testbtn" type="button">testtesttest</button>
     </div>
 
 
-    <div id="episodediv" class="btn-group-vertical col-md-4 col-xs-4" role="group" aria-label="Vertical button group">
+    <div id="episodediv" class="btn-group-vertical col-md-8 col-xs-8" role="group" aria-label="Vertical button group">
 
     </div>
 
@@ -100,21 +111,37 @@
 <script src="javascripts/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#testbtn').click(function () {
-            htmlobj=$.ajax({url:"/vod/text", async:false});
+        $('.seasonbtn').click(function () {
+            try {
+                $('.seasonbtn').removeClass('btn-primary');
+                $('.seasonbtn').addClass('btn-default');
+
+//                $('.seasonbtn').append('<span class="glyphicon glyphicon-menu-right pull-right" aria-hidden="true"></span>')
+            }
+            catch (err){console.log(err)}
+
+            $(this).removeClass('btn-default');
+            $(this).addClass('btn-primary');
+
+            seasonname = $(this).html()
+            htmlobj=$.ajax({url:"/vod/episodeload/"+seasonname, async:false});
             $('#episodediv').html(htmlobj.responseText);
         });
     });
-    
-    // function focusbtn() {
-    //     $(".seasonbtn").onmouseover(function () {
-    //         $(".seasonbtn").removeClass("btn-default")
-    //         $(".seasonbtn").addClass("btn-primary")
-    //     })
-    // }
 
-    function jump(path){
-        window.location.href='/player/'+path+'';
+//    $(document).ready(function () {
+//        $('.episodebtn').click(function(){
+//            episodename = $(this).html()
+//            console.log('episodebtn::::!!!!!!', episodename);
+//            window.location.href = '/player/'+episodename+'';
+//        });
+//    });
+
+
+    function jump(e){
+        let episodename = $(e).text();
+        window.location.href = '/player/'+episodename+'';
+//        window.location.href='/player/'+path+'';
     }
 </script>
 <script src="javascripts/bootstrap.min.js"></script>

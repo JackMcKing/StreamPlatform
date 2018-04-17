@@ -4,12 +4,13 @@ var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    finder((err, files) => {
+    let path = '/usr/local/var/www/hls/sum';
+    finder(path, (err, files) => {
         if (err) {
             res.end(JSON.stringify(err));
             return;
         }
-        var out = {
+        let out = {
             error: null,
             files: files
         };
@@ -23,12 +24,35 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/text', function (req, res, next) {
-   res.send('<button>testbutton</button>')
+router.get(/\/episodeload\/([^\/]+)\/?$/, function (req, res, next) {
+    let seasonname = req.params[0];
+    console.log('seasonname!!!', seasonname);
+    // var episodesArry = eposidefinder('/usr/local/var/www/hls/'+seasonname);
+    // console.log('routerget::::', episodesArry[1]);
+    // res.send('<button>'+episodesArry[1]+'</button>')
+    let path = '/usr/local/var/www/hls/sum/'+seasonname;
+    finder(path, (err, files) => {
+        if (err) {
+            res.end(JSON.stringify(err));
+            return;
+        }
+        let out = {
+            error: null,
+            files: files
+        };
+        let initbtns = '';
+        for (let n=0; n<files.length; n++)
+        {
+            let newbtns = "<button type='button' class='btn btn-default episodebtn' onclick=jump(this)>"+files[n]+"</button>";
+            initbtns = initbtns + newbtns;
+        }
+        console.log('initbtns::::::', initbtns);
+        res.send(initbtns)
+    });
 });
 
-function finder(callback) {
-    const path = '/usr/local/var/www/hls';
+function finder(path, callback) {
+    // const path = '/usr/local/var/www/hls';
     fs.readdir(path, function(err, files) {
         if (err) {
             callback(err);
@@ -40,6 +64,51 @@ function finder(callback) {
 
 }
 
+function eposidefinder(path) {
+    var outfiles = new Array();
+    fs.readdir(path, function (err, files) {
+        if(err){
+            console.log(err);
+        }
+        console.log(files);
+        Array.prototype.push.apply(outfiles, files)
+    });
+    console.log('outfiles:::::', outfiles);
+    return outfiles
+}
+
+function explorer(path){
+
+    fs.readdir(path, function(err, files){
+        let episodesArry = new Array('');
+        //err 为错误 , files 文件名列表包含文件夹与文件
+        if(err){
+            console.log('error:\n' + err);
+            return;
+        }
+
+        files.forEach(function(file){
+
+            fs.stat(path + '/' + file, function(err, stat){
+                if(err){console.log(err); return;}
+                if(stat.isDirectory()){
+                    // 如果是文件夹遍历
+                    explorer(path + '/' + file);
+                }else{
+                    // 读出所有的文件
+                    console.log('文件名:' + path + '/' + file);
+                    episodesArry.push(file)
+                }
+
+            });
+
+        });
+        console.log('esary 0:::::', episodesArry[0]);
+        console.log('esary 1:::::', episodesArry[1]);
+        return episodesArry
+        fs.readdir()
+    });
+}
 
 
 module.exports = router;
