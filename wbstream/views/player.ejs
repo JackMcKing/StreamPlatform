@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="stylesheets/bootstrap.min.css" crossorigin="anonymous">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <title>Flint Stream</title>
 </head>
-<body>
-<div class="container">
-    <nav class="navbar navbar-default">
+
+    <body>
+    <div class="container">
+        <nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -22,13 +24,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Flint</a>
+                <a class="navbar-brand" href="#">Flint</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">点拨 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="/vod">点拨</a></li>
                     <li><a href="#">直播</a></li>
                     <!--<li class="dropdown">-->
                     <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
@@ -50,7 +52,7 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="http://www.baidu.com">联系我们</a></li>
+                    <li><a href="#">联系我们</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">登录 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -65,58 +67,24 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    <!--<div class="btn-group-vertical col-md-4 col-xs-4" role="group" aria-label="Vertical button group">-->
-        <!--<button type="button" class="btn btn-primary">Rick and morty S02E01<span class="glyphicon glyphicon-menu-right pull-right" aria-hidden="true"></span></button>-->
-    <!--</div>-->
-    <!--<div class="btn-group-vertical col-md-8 col-xs-8" role="group" aria-label="Vertical button group">-->
-        <!--<button type="button" class="btn btn-default">Rick and morty S02E01</button>-->
-    <!--</div>-->
-    <div class="btn-group-vertical col-md-4 col-xs-4" role="group" aria-label="Vertical button group">
-        <% for(var i=0 ; i<data.files.length; i++){ %>
-        <div type="button" class="btn btn-default seasonbtn" onclick="jump('<%= data.files[i] %>')"><%=
-                data.files[i]
-            %></div>
-        <% }%>
-        <button id="testbtn" type="button">testtesttest</button>
+        <!--<div class="embed-responsive embed-responsive-16by9">-->
+            <!--<iframe class="embed-responsive-item" src=""></iframe>-->
+        <!--</div>-->
+        <div class="embed-responsive embed-responsive-16by9" align="center">
+
+            <% var url = "http://103.107.106.254/hls/"+data+".mp4" %>
+                <video align="center" width="1080" controls="controls" class="embed-responsive-item" >
+                    <source src='<%= url %>' >
+                </video>
+                <!--<%= url %>-->
+        </div>
+
+        <script
+                src="https://code.jquery.com/jquery-1.12.4.min.js"
+                integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </div>
+    </body>
 
-
-    <div id="episodediv" class="btn-group-vertical col-md-4 col-xs-4" role="group" aria-label="Vertical button group">
-
-    </div>
-
-    <!--<div align="center"><video width="1080" src="http://103.107.106.254/hls/Django.mp4" controls="controls" ></video></div>-->
-
-    <!--<div align="center" class="media">-->
-        <!--<video class="media-object" src="http://103.107.104.254/hls/Django.mp4" controls="controls"></video>-->
-        <!--&lt;!&ndash;<div class="media-body">&ndash;&gt;-->
-            <!--&lt;!&ndash;<h4 class="media-heading">Media heading</h4>&ndash;&gt;-->
-            <!--&lt;!&ndash;被解救的姜戈&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-    <!--</div>-->
-    <!--<div align="center" class="media"><video width="480pt" src="http://103.107.104.254/hls/Django.mp4" controls="controls" ></video></div>-->
-</div>
-
-<script src="javascripts/jquery-1.12.4.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#testbtn').click(function () {
-            htmlobj=$.ajax({url:"/vod/text", async:false});
-            $('#episodediv').html(htmlobj.responseText);
-        });
-    });
-    
-    // function focusbtn() {
-    //     $(".seasonbtn").onmouseover(function () {
-    //         $(".seasonbtn").removeClass("btn-default")
-    //         $(".seasonbtn").addClass("btn-primary")
-    //     })
-    // }
-
-    function jump(path){
-        window.location.href='/player/'+path+'';
-    }
-</script>
-<script src="javascripts/bootstrap.min.js"></script>
-</body>
 </html>
