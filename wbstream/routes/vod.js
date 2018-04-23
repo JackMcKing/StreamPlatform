@@ -24,13 +24,13 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get(/\/episodeload\/([^\/]+)\/?$/, function (req, res, next) {
+router.get(/\/episodeload\/([^\/]+)\/?$/, function(req, res, next) {
     let seasonname = req.params[0];
     console.log('seasonname!!!', seasonname);
     // var episodesArry = eposidefinder('/usr/local/var/www/hls/'+seasonname);
     // console.log('routerget::::', episodesArry[1]);
     // res.send('<button>'+episodesArry[1]+'</button>')
-    let path = '/usr/local/var/www/hls/sum/'+seasonname;
+    let path = '/usr/local/var/www/hls/sum/' + seasonname;
     finder(path, (err, files) => {
         if (err) {
             res.end(JSON.stringify(err));
@@ -41,9 +41,10 @@ router.get(/\/episodeload\/([^\/]+)\/?$/, function (req, res, next) {
             files: files
         };
         let initbtns = '';
-        for (let n=0; n<files.length; n++)
-        {
-            let newbtns = "<button type='button' class='btn btn-default episodebtn' onclick=jump(this)>"+files[n]+"</button>";
+        for (let n = 0; n < files.length; n++) {
+            let index = files[n].indexOf('.');
+            let filename = files[n].substring(0, index);
+            let newbtns = "<button type='button' class='btn btn-default episodebtn' onclick=jump(this)>" + filename + "</button>";
             initbtns = initbtns + newbtns;
         }
         console.log('initbtns::::::', initbtns);
@@ -66,8 +67,8 @@ function finder(path, callback) {
 
 function eposidefinder(path) {
     var outfiles = new Array();
-    fs.readdir(path, function (err, files) {
-        if(err){
+    fs.readdir(path, function(err, files) {
+        if (err) {
             console.log(err);
         }
         console.log(files);
@@ -77,24 +78,27 @@ function eposidefinder(path) {
     return outfiles
 }
 
-function explorer(path){
+function explorer(path) {
 
-    fs.readdir(path, function(err, files){
+    fs.readdir(path, function(err, files) {
         let episodesArry = new Array('');
         //err 为错误 , files 文件名列表包含文件夹与文件
-        if(err){
+        if (err) {
             console.log('error:\n' + err);
             return;
         }
 
-        files.forEach(function(file){
+        files.forEach(function(file) {
 
-            fs.stat(path + '/' + file, function(err, stat){
-                if(err){console.log(err); return;}
-                if(stat.isDirectory()){
+            fs.stat(path + '/' + file, function(err, stat) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if (stat.isDirectory()) {
                     // 如果是文件夹遍历
                     explorer(path + '/' + file);
-                }else{
+                } else {
                     // 读出所有的文件
                     console.log('文件名:' + path + '/' + file);
                     episodesArry.push(file)
