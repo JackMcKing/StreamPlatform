@@ -13,6 +13,17 @@
             background-color: #0f0f0f;
             /*-webkit-filter: blur(15px);*/
         }
+        video::-internal-media-controls-download-button {
+            display:none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            overflow:hidden;
+        }
+
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px); 
+        }
     </style>
     <title>Rebecca Cloud</title>
 </head>
